@@ -101,6 +101,22 @@ std::tuple<Test<0>, Test<1>, Test<2>> runtimeRecursion(unsigned i = 100) {
 }
 
 /**
+ * Same as the best case, however it is a deeply nested recursive function.
+ * Relies on NRVO.
+ */
+template <unsigned N = 5>
+std::tuple<Test<0>, Test<1>, Test<2>> recursionNRVO() {
+  if constexpr (N > 0) {
+    // this line can cause a move (gcc-11: yes, clang-13: no)
+    auto res = constexprRecursion<N - 1>();
+    return res;
+  } else {
+    std::tuple<Test<0>, Test<1>, Test<2>> res = {0, 1, 2};
+    return res;
+  }
+}
+
+/**
  * Using the constructor of the class directly.
  */
 std::tuple<Test<0>, Test<1>, Test<2>> typicalCase() {
@@ -153,6 +169,9 @@ int main() {
 
   { auto res = runtimeRecursion(); }
   evalAndReset("runtimeRecursion");
+
+  { auto res = recursionNRVO(); }
+  evalAndReset("recursionNRVO");
 
   { auto res = typicalCase(); }
   evalAndReset("typicalCase");
