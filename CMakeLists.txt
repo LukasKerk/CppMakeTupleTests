@@ -13,10 +13,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(TupleTesting TupleTesting.cpp)
 
 add_custom_target(visualize
-  SOURCES formatting.sh evaluate.py
+  SOURCES scripts/formatting.sh scripts/evaluate.py
   DEPENDS TupleTesting
   BYPRODUCTS visualisation.pdf
   COMMAND "${CMAKE_BINARY_DIR}/TupleTesting"
-    | "${CMAKE_CURRENT_SOURCE_DIR}/formatting.sh"
-    | "${CMAKE_CURRENT_SOURCE_DIR}/evaluate.py"
+    | "${CMAKE_CURRENT_SOURCE_DIR}/scripts/formatting.sh"
+    | "${CMAKE_CURRENT_SOURCE_DIR}/scripts/evaluate.py"
 )
